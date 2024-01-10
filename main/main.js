@@ -23,24 +23,29 @@ function capture(root){
 		under the specified root.
 	*/
 
-	let res = []; // Result
-	for (let i=0; i<root.length; i++){
-		// Enumerate every child node in the document
-
-		if(root[i].childNodes && root[i].childNodes.length > 0){
-			// If the element has child nodes, recursively capture them
-			res.push({
-				'Tag': root[i].nodeName,
-				'Children': capture(root[i].childNodes)
-			});
+		let res = [];
+		for (let i = 0; i < root.length; i++) {
+			if (root[i].nodeType === Node.ELEMENT_NODE) {
+				const nodeInfo = {
+					'Tag': root[i].nodeName,
+					'Children': null,
+					'Parent': null,
+					'Elm': root[i]
+				};
+				if (root[i].childNodes && root[i].childNodes.length > 0) {
+					nodeInfo.Children = capture(root[i].childNodes);
+				}
+				if (root[i].parentNode) {
+					nodeInfo.Parent = {
+						'Tag': root[i].parentNode.nodeName,
+						'Children': capture(root[i].parentNode),
+					};
+				}
+				res.push(nodeInfo);
+			}
 		}
-		else {
-			// If the element has no child nodes, just add it to the result
-			res.push({'Tag': root[i].nodeName});
-		}
-	}
-
-	return res; // Return the result
+		return res;
+	
 }
 
 function captureAll(){
@@ -57,7 +62,7 @@ function createVnode(tag,child,parent,data){
  	* Create a virtual DOM node.
  	* @param {string} tag - The tag name of the virtual DOM node.
  	* @param {Array} [child] - Child nodes of the current node (optional).
- 	* @param {Array} [parent] - Node to which the current node should be attached (optional, default is document.body).
+ 	* @param {Any} [parent] - Node to which the current node should be attached (optional, default is document.body).
  	* @param {*} [data] - Data associated with the virtual DOM node (optional).
  	* @returns {Object} - The created virtual DOM node.
  	*/
@@ -76,7 +81,7 @@ function createVnode(tag,child,parent,data){
 			vnode.Children[i].Parent=vnode;
 		}
 	}
-	if (parent!=undefined && isArray(parent)){
+	if (parent!=undefined){
 		vnode['Parent']=parent;
 	}
 	if (data!=undefined){
@@ -122,7 +127,15 @@ function createElm(vnode){
 				vnode.Elm.addEventListener("click",vnode.Data.method)
 			}
 			else{
+				console.log(vnode.Data.method['type'],vnode.Data.method['handler'])
 				vnode.Elm.addEventListener(vnode.Data.method['type'],vnode.Data.method['handler'])
+			}
+		}
+		else{
+			for (item in vnode.Data){
+				if (item != 'text'){
+					vnode.Elm.setAttribute(item,vnode.Data[item])
+				}
 			}
 		}
 	}
@@ -155,11 +168,18 @@ function addNode(a){
 	return res;
 }
 
-function update(vnode){
+function update(oldnode,newnode){
 	/**
 	 * diff
-	 * give old vnode return new vnode
+	 * give old vnode and add new vnode
 	 */
+	
+	//small text change first
+	if ((newnode['Data']['text'] != oldnode['Data']['text'])&&oldnode['Elm']!=undefined){
+		console.table(oldnode,newnode)
+		oldnode['Elm'].textContent = newnode['Data']['text'];
+	}
+
 }
 
 /* 

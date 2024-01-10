@@ -1,10 +1,15 @@
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>Kaze - A light weight Virtual DOM Library</title>
+        <title>Kaze.js - A light weight Virtual DOM Library</title>
         <!-- <link rel="stylesheet" href="https://unpkg.com/xp.css"> -->
         <!-- <link rel="stylesheet" href="https://sakofchit.github.io/system.css/system.css"> -->
         <link rel="stylesheet" href="https://unpkg.com/7.css">
+        <style>
+            div{
+                left:500px
+            }
+        </style>
     </head>
     <body>
         <script type="text/javascript" src="./main.js"></script>
@@ -21,21 +26,35 @@
                                         {text:'Hello, Virtual DOM!'});
             createElm(textNode);
             attach(textNode);
+            let num = 1;
             let list = addNode([
-                {Tag:'div',Children:null,Parent:null,Data:{text:'test0'}},
-                {Tag:'span',Children:null,Parent:null,Data:{text:'test1'}},
-                {Tag:'div',Children:null,Parent:null,Data:{text:'test2',method:()=>{alert('Testcase')}}},
+                {Tag:'div',Children:null,Parent:null,Data:{text:`sum:0`}},
+                {Tag:'span',Children:null,Parent:null,Data:{text:'text1'}},
+                {Tag:'div',Children:null,Parent:null,Data:{text:'text2',method:()=>{alert('Testcase')}}},
                 {Tag:'button',Children:null,Parent:null,
                 Data:{
                     text:'Click Me!!!',
                     method:{type:'click',handler:buttonHandler}
                     }
+                },
+                {Tag:'meta',Children:null,Parent:capture([document.head])[0],
+                Data:{
+                    charset:'utf-8'
+                    }
+                },
+                {Tag:'link',Children:null,Parent:capture([document.head])[0],
+                Data:{
+                    rel:'icon',
+                    href:'https://cdn-icons-png.flaticon.com/512/2011/2011448.png',
+                    type:'image/x-icon'
+                    }
                 }
                     ]);
+            console.log(list[0].Data.text)
             function buttonHandler(){
                 (function(){
-                        alert('Anonymous function call')
-                }
+                    console.log('Anonymous function call,handler triggered');
+                    update(list[0],{Tag:'div',Children:null,Parent:null,Data:{text:`sum:${num++}`}});}
                 )()
             }
             console.log(captureAll(),list);
