@@ -4,15 +4,25 @@
         <title>Kaze.js - A light weight Virtual DOM Library</title>
         <!-- <link rel="stylesheet" href="https://unpkg.com/xp.css"> -->
         <!-- <link rel="stylesheet" href="https://sakofchit.github.io/system.css/system.css"> -->
-        <link rel="stylesheet" href="https://unpkg.com/7.css">
-        <style>
-            div{
-                left:500px
-            }
-        </style>
+        <!-- <link rel="stylesheet" href="https://unpkg.com/7.css"> -->
     </head>
     <body>
+        <div class="window active" style="max-width: 300px">
+            <div class="title-bar">
+              <div class="title-bar-text">Kaze.js</div>
+              <div class="title-bar-controls">
+                <button aria-label="Minimize"></button>
+                <button aria-label="Maximize"></button>
+                <button aria-label="Close"></button>
+              </div>
+            </div>
+            <div class="window-body has-space">
+                <p class="window-body-text">Hello</p>
+                <button style="width: fit-content;">Confirm</button>
+            </div>
+        </div>
         <script type="text/javascript" src="./main.js"></script>
+<script src="jquery-1.0a.js"></script>
         <script type="text/javascript">
             let textNode = createVnode('p',
                                         [createVnode(
@@ -28,8 +38,8 @@
             attach(textNode);
             let num = 1;
             let list = addNode([
-                {Tag:'div',Children:null,Parent:null,Data:{text:`sum:0`}},
-                {Tag:'span',Children:null,Parent:null,Data:{text:'text1'}},
+                {Tag:'div',Children:null,Parent:null,Data:{text:'sum:0'}},
+                {Tag:'span',Children:null,Parent:null,Data:{text:'Span'}},
                 {Tag:'div',Children:null,Parent:null,Data:{text:'text2',method:()=>{alert('Testcase')}}},
                 {Tag:'button',Children:null,Parent:null,
                 Data:{
@@ -37,6 +47,7 @@
                     method:{type:'click',handler:buttonHandler}
                     }
                 },
+                {Tag:'input',Children:null,Parent:null,Data:{id:'xx'}},
                 {Tag:'meta',Children:null,Parent:capture([document.head])[0],
                 Data:{
                     charset:'utf-8'
@@ -54,10 +65,12 @@
             function buttonHandler(){
                 (function(){
                     console.log('Anonymous function call,handler triggered');
-                    update(list[0],{Tag:'div',Children:null,Parent:null,Data:{text:`sum:${num++}`}});}
+                    update(list[1],{Tag:'a',Children:null,Parent:null,Data:{text:document.querySelector('input#xx').value}});
+                }
                 )()
             }
             console.log(captureAll(),list);
+            console.log(capture([document.querySelector("p.window-body-text")]))
         </script>
     </body>
 </html>

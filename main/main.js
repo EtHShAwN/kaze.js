@@ -127,7 +127,6 @@ function createElm(vnode){
 				vnode.Elm.addEventListener("click",vnode.Data.method)
 			}
 			else{
-				console.log(vnode.Data.method['type'],vnode.Data.method['handler'])
 				vnode.Elm.addEventListener(vnode.Data.method['type'],vnode.Data.method['handler'])
 			}
 		}
@@ -168,18 +167,34 @@ function addNode(a){
 	return res;
 }
 
-function update(oldnode,newnode){
+function update(oldNode,newNode){
 	/**
 	 * diff
 	 * give old vnode and add new vnode
 	 */
 	
 	//small text change first
-	if ((newnode['Data']['text'] != oldnode['Data']['text'])&&oldnode['Elm']!=undefined){
-		console.table(oldnode,newnode)
-		oldnode['Elm'].textContent = newnode['Data']['text'];
+	if(newNode.Tag !== oldNode.Tag){
+		createElm(newNode);
+		// remove old one
+		oldNode.Elm.parentNode.replaceChild(newNode.Elm,oldNode.Elm);
+		for (item in oldNode){
+			oldNode[item] = newNode[item];
+		}
+		// return newNode
+		return newNode;
 	}
-
+	if(newNode.Parent !== oldNode.Parent){
+		//mount point is changed
+		update(oldNode.Parent,newNode.Parent);
+	}
+	if (newNode.Children && oldNode.Children) {
+        const length = whichMin(newNode.Children.length, oldNode.Children.length);
+        for (let i = 0; i < length; i++) {
+            update(oldNode.Children[i], newNode.Children[i]);
+        }
+    }
+	return oldNode;
 }
 
 /* 
@@ -195,4 +210,13 @@ function getTimeStamp(){
 
 function Timer(){
 	return getTimeStamp();
+}
+
+function whichMin(a,b){
+	if (a<b){
+		return a;
+	}
+	else{
+		return b;
+	}
 }
