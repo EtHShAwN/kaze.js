@@ -2,9 +2,10 @@
 <html>
     <head>
         <title>Kaze.js - A light weight Virtual DOM Library</title>
-        <!-- <link rel="stylesheet" href="https://unpkg.com/xp.css"> -->
+        <link rel="stylesheet" href="https://unpkg.com/xp.css">
         <!-- <link rel="stylesheet" href="https://sakofchit.github.io/system.css/system.css"> -->
-        <link rel="stylesheet" href="https://unpkg.com/7.css">
+        <meta charset="utf-8">
+        <!--<link rel="stylesheet" href="./style/7.css">-->
     </head>
     <body>
         <div class="window active" style="max-width: 300px">
@@ -21,56 +22,26 @@
                 <button style="width: fit-content;">Confirm</button>
             </div>
         </div>
-        <script type="text/javascript" src="./main.js"></script>
-<script src="jquery-1.0a.js"></script>
+        <script type="text/javascript" src="./kaze-min.js"></script>
         <script type="text/javascript">
-            let textNode = createVnode('p',
-                                        [createVnode(
-                                            'div',
-                                            null,
-                                            null,
-                                            {text:'Hello, Child Node!'}
-                                            )
-                                        ],
-                                        null,
-                                        {text:'Hello, Virtual DOM!'});
-            createElm(textNode);
-            attach(textNode);
-            let num = 1;
-            let list = addNode([
-                {Tag:'div',Children:null,Parent:null,Data:{text:'sum:0'}},
-                {Tag:'span',Children:null,Parent:null,Data:{text:'Span'}},
-                {Tag:'div',Children:null,Parent:null,Data:{text:'text2',method:()=>{alert('Testcase')}}},
-                {Tag:'button',Children:null,Parent:null,
-                Data:{
-                    text:'Click Me!!!',
-                    method:{type:'click',handler:buttonHandler}
-                    }
-                },
-                {Tag:'input',Children:null,Parent:null,Data:{id:'xx'}},
-                {Tag:'meta',Children:null,Parent:capture([document.head])[0],
-                Data:{
-                    charset:'utf-8'
-                    }
-                },
-                {Tag:'link',Children:null,Parent:capture([document.head])[0],
-                Data:{
-                    rel:'icon',
-                    href:'https://cdn-icons-png.flaticon.com/512/2011/2011448.png',
-                    type:'image/x-icon'
-                    }
-                }
-                    ]);
-            console.log(list[0].Data.text)
-            function buttonHandler(){
-                (function(){
-                    console.log('Anonymous function call,handler triggered');
-                    update(list[1],{Tag:'a',Children:null,Parent:null,Data:{text:document.querySelector('input#xx').value}});
-                }
-                )()
-            }
-            console.log(captureAll(),list);
-            console.log(capture([document.querySelector("p.window-body-text")]))
+            wrapper = hyperScript('div.window active',{'style':{"max-width":"300px"}},0);
+            a=hyperScript('div#jk.title-bar',{'tq':'123','ta':'a'},0);
+            b=createVnode('div',{'ta':'123',
+                                'a':'2',
+                                'className':'title-bar-text',
+                                'style':{
+                                    'color':'#1c1c1c',
+                                    'width':'290px',
+                                    'margin-top':'20px'
+                                }
+                            },undefined,undefined,"Hello World",undefined)
+            console.log(wrapper)
+            wrapper.elm = createElement(wrapper)
+            b.elm = createElement(b)
+            a.elm = createElement(a)
+            document.body.appendChild(wrapper.elm);
+            wrapper.elm.appendChild(a.elm)
+            a.elm.appendChild(b.elm)
         </script>
     </body>
 </html>
